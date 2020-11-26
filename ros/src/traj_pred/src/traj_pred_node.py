@@ -17,7 +17,6 @@ import sensor_msgs.point_cloud2 as pc2
 from geodesy import utm
 from std_msgs.msg import Header
 from geometry_msgs.msg import Pose, Vector3
-from visualization_msgs.msg import Marker, MarkerArray
 from sensor_msgs.msg import PointCloud2, NavSatFix, Imu
 from tf.transformations import euler_from_quaternion
 from message_filters import ApproximateTimeSynchronizer, Subscriber
@@ -115,7 +114,6 @@ class AppNode(object):
         self.lidar_sub = rospy.Subscriber(
             lidar_topic_sub, PointCloud2, self.lidar_callback, queue_size=1, buff_size=2**24)
         
-        self.hmi_local_markers_pub = rospy.Publisher('/hmi/local_markers', MarkerArray, queue_size=10)
         self.timer = rospy.Timer(rospy.Duration(0.1), self.timer_callback)
 
     def get_synchronized(self, stamp, queue):
@@ -283,8 +281,6 @@ class AppNode(object):
             img_seg[...,1] = pred_seg
             img_seg[...,2] = img_bev
             self.img_bev = np.concatenate([img_seg, img_traj], axis=1)
-
-            #self.publish_hmi_local_markers(msg.header, traj_hmi_car)
 
         if self.img_map is not None:
             self.img_gloabl_path = self.draw_current_pose(self.img_map, current_pose, search_range)
@@ -484,44 +480,6 @@ class AppNode(object):
                             
             cv2.line(img, (x1, y1), (x2, y2), color, thickness)
         return img
-
-    def publish_hmi_local_markers(self, header, points):
-        #if not self.hmi_local_markers_pub.getNumSubscribers():
-        #    return
-        
-        marker_arr = MarkerArray()
-        i = 0
-        for x, y in points:
-            marker = Marker()
-            marker.header.frame_id = header.frame_id
-            marker.header.stamp = header.stamp
-            marker.ns = 'hmi'
-            marker.id = i
-            marker.type = marker.SPHERE
-            marker.action = marker.ADD
-            marker.pose.position.x = x
-            marker.pose.position.y = y
-            if self.use_kitti_bag:
-                marker.pose.position.x = y
-                marker.pose.position.y = -x
-            marker.pose.position.z = 1.0
-            marker.pose.orientation.x = 0
-            marker.pose.orientation.y = 0
-            marker.pose.orientation.z = 0
-            marker.pose.orientation.w = 1.0
-            marker.scale.x = 1.0
-            marker.scale.y = 1.0
-            marker.scale.z = 1.0
-            marker.color.r = 1.0
-            marker.color.g = 0.0
-            marker.color.b = 0.0
-            marker.color.a = 1.0
-            marker.lifetime = rospy.Duration(0.1)
-            i += 1
-
-            marker_arr.markers.append(marker)
-
-        self.hmi_local_markers_pub.publish(marker_arr)
 
 def main(args):
     rospy.init_node('traj_pred_node')

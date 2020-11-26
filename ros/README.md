@@ -3,7 +3,7 @@ Trajectory Prediction
 
 ## Requirements
 
-- Ubuntu 20.04 & ROS neotic
+- Ubuntu 20.04 & [ROS noetic](http://wiki.ros.org/noetic)
 - Pytorch 1.4+
 
 ## Build
