@@ -265,7 +265,7 @@ class MTPDataset(PointCloudDataset):
         traj_ins_all = np.vstack((traj_ins_past[::-1], traj_ins)) 
         traj_hmi_all = np.vstack((traj_hmi_past[::-1], traj_hmi)) 
 
-        # random shit hmi trajectory
+        # random pertubate hmi trajectory
         if self.cfg.mode == 'train':
             traj_hmi_all = self.random_shift(traj_hmi_all, self.cfg.get('max_random_shift', 1.0))
 

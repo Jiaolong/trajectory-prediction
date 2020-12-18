@@ -13,12 +13,11 @@ from torchvision.transforms import ToTensor
 # ros
 import rospy
 import rospkg
-import sensor_msgs.point_cloud2 as pc2
+import ros_numpy
 from geodesy import utm
 from std_msgs.msg import Header
-from geometry_msgs.msg import Pose, Vector3
-from sensor_msgs.msg import PointCloud2, NavSatFix, Imu
 from tf.transformations import euler_from_quaternion
+from sensor_msgs.msg import PointCloud2, NavSatFix, Imu
 from message_filters import ApproximateTimeSynchronizer, Subscriber
 
 # nnlib
@@ -181,7 +180,10 @@ class AppNode(object):
         return np.array([int(px), int(py)], np.int32)
    
 
-    def process_lidar(self, lidar_msg):
+    def process_lidar_pc2(self, lidar_msg):
+        """
+        Deprecated method to read point cloud message. It is much slower than ros_numpy method.
+        """
         points = []
         #for p in pc2.read_points(lidar_msg, field_names = ("x", "y", "z", "intensity"), skip_nans=True):
         for p in pc2.read_points(lidar_msg, field_names = ("x", "y", "z", "i"), skip_nans=True):
@@ -198,11 +200,12 @@ class AppNode(object):
         bev_map = bev.create_bev(points, self.lidar_range_np, self.img_h, self.img_w, self.bev_res)
         return bev_map
 
-    def process_lidar_rosnumpy(self, lidar_msg):
+    def process_lidar(self, lidar_msg):
         cloud_array = ros_numpy.numpify(lidar_msg)
         points = np.zeros((cloud_array.shape[0], 4))
         points[:, 2] = cloud_array['z']
-        points[:, 3] = cloud_array['intensity']
+        # points[:, 3] = cloud_array['intensity']
+        points[:, 3] = cloud_array['i']
         if self.use_kitti_bag:
             points[:, 0] = cloud_array['y'] * (-1)
             points[:, 1] = cloud_array['x']
