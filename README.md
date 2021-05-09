@@ -1,9 +1,9 @@
-# Trajectory Prediction with Noisy Topometric Map for Autonomous Navigation
+# Trajectory Prediction for Autonomous Driving with Topometric Map
 
-Repository for the paper ["Trajectory Prediction with Noisy Topometric Map for Autonomous Navigation"](https://arxiv.org/).
+Repository for the paper ["Trajectory Prediction for Autonomous Driving with Topometric Map"](https://arxiv.org/).
 ```
 @inproceedings{traj-pred:2020,
-  title={Trajectory Prediction with Noisy Topometric Map for Autonomous Navigation},
+  title={Trajectory Prediction for Autonomous Driving with Topometric Map},
   author={J. Xu, L. Xiao, D. Zhao etal},
   booktitle={arxiv},
   year={2020}
