@@ -1,6 +1,6 @@
 # Trajectory Prediction for Autonomous Driving with Topometric Map
 
-Repository for the paper ["Trajectory Prediction for Autonomous Driving with Topometric Map"](https://arxiv.org/).
+Repository for the paper ["Trajectory Prediction for Autonomous Driving with Topometric Map"](https://arxiv.org/abs/2105.03869).
 ```
 @inproceedings{traj-pred:2020,
   title={Trajectory Prediction for Autonomous Driving with Topometric Map},
