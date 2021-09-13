@@ -1,13 +1,13 @@
 import pprint
 import torch
 from tensorboardX import SummaryWriter
-from nnlib.utils.config import get_config
-from nnlib.utils.common import get_logger, set_random_seed
+from lidardet.utils.config import get_config
+from lidardet.utils.common import get_logger, set_random_seed
 
-from nnlib.utils import dist
-from nnlib.models import model_fn_decorator
-from nnlib.models.builder import build_model
-from nnlib.datasets.builder import build_dataloader
+from lidardet.utils import dist
+from lidardet.models import model_fn_decorator
+from lidardet.models.builder import build_model
+from lidardet.datasets.builder import build_dataloader
 
 from train_utils.optimization import build_optimizer, build_scheduler
 from train_utils.train_utils import train_model
@@ -49,8 +49,9 @@ def main():
     start_epoch = it = 0
     last_epoch = -1
     if cfg.ckpt is not None:
-        it, start_epoch = model.load_params_with_optimizer(cfg.ckpt, to_cpu=dist, optimizer=optimizer, logger=logger)
-        last_epoch = start_epoch + 1
+        #it, start_epoch = 
+        model.load_params_with_optimizer(cfg.ckpt, to_cpu=dist, optimizer=optimizer, logger=logger)
+        #last_epoch = start_epoch + 1
 
     model.train()  
     if dist_train:

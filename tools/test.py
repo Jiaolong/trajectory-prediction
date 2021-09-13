@@ -1,12 +1,12 @@
 import os
 import torch
 import pprint
-from nnlib.utils import dist
-from nnlib.utils.config import get_config
-from nnlib.utils.common import get_logger, set_random_seed
+from lidardet.utils import dist
+from lidardet.utils.config import get_config
+from lidardet.utils.common import get_logger, set_random_seed
 
-from nnlib.models.builder import build_model
-from nnlib.datasets.builder import build_dataloader
+from lidardet.models.builder import build_model
+from lidardet.datasets.builder import build_dataloader
 
 from eval_utils.trajectory_prediction import eval_trajectory_prediction
 
@@ -16,10 +16,8 @@ def eval_single_model(model, test_loader, cfg, ckpt_file, logger, dist_test):
     model.load_params_from_file(filename=ckpt_file, logger=logger, to_cpu=dist_test)
     model.cuda()
 
-    # start evaluation
-    if cfg.model.task == 'trajectory_prediction':
-        eval_trajectory_prediction(cfg, model, test_loader, logger, dist_test=dist_test, 
-                result_dir=cfg.output_dir, save_to_file=cfg.get('save_to_file', True)) 
+    eval_trajectory_prediction(cfg, model, test_loader, logger, dist_test=dist_test, 
+            result_dir=cfg.output_dir, save_to_file=cfg.get('save_to_file', True)) 
 
 def main():
 

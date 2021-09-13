@@ -3,7 +3,7 @@ import time
 import pickle
 import numpy as np
 import torch
-from nnlib.models import load_data_to_gpu
+from lidardet.models import load_data_to_gpu
 
 def eval_trajectory_prediction(cfg, model, dataloader, logger, dist_test=False, save_to_file=False, result_dir=None):
     result_dir.mkdir(parents=True, exist_ok=True)

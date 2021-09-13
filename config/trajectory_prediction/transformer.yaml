@@ -1,0 +1,106 @@
+# train
+batch_size: &batch_size 64
+epochs: 120
+start_epoch: 0
+launcher: 'none'
+ckpt_save_interval: 2
+max_ckpt_save_num: 20
+
+# global settings
+point_cloud_range: &point_cloud_range [-32.0, -16.0, -2.5, 32.0, 32.0, 3.5]
+voxel_size: &voxel_size [0.16, 0.16, 4]
+num_points_per_trajectory: &num_points_per_trajectory 10 # ~ 20m length
+
+# dataset settings
+dataset_type: &dataset_type "HeatMapDataset"
+data_root: &data_root "datasets/KITTI_RAW/trajectory_prediction/"
+
+data:  
+  train:
+    type: *dataset_type
+    root_path: *data_root
+    mode: 'train'
+    subset: ['00', '02', '05', '07']
+    
+    voxel_size: *voxel_size
+    batch_size: *batch_size
+    point_cloud_range: *point_cloud_range
+    num_points_per_trajectory: *num_points_per_trajectory
+    
+    num_workers: 4
+    road_width: 2.0
+    sensor_height: 1.73
+    lidar_intensity_max: 1.0
+    lidar_bev_type: 'rgb_map' # 'height_map', 'rgb_map', 'rgb_traversability_map'
+
+    random_drop: false
+    random_shift: true
+    max_random_shift: 0.25
+    random_flip: true
+    random_rotate: false
+    use_lidar_points: false
+
+  val:
+    type: *dataset_type
+    root_path: *data_root
+    mode: 'val'
+    subset: ['10']
+    
+    voxel_size: *voxel_size
+    batch_size: *batch_size
+    point_cloud_range: *point_cloud_range
+    num_points_per_trajectory: *num_points_per_trajectory
+
+    num_workers: 4
+    road_width: 2.0
+    sensor_height: 1.73
+    lidar_intensity_max: 1.0
+    lidar_bev_type: 'rgb_map' # 'height_map', 'rgb_map', 'rgb_traversability_map'
+    use_lidar_points: false
+   
+# model settings
+model:
+  type: ConvTrajPredictor
+  task: 'trajectory_prediction'
+
+  backbone:
+    use_bn: true
+    input_dim: 4
+    num_blocks: [3, 6, 6, 3]
+
+  header:
+    use_bn: true
+    use_road_seg: true
+    use_transformer: true
+    weight_loss_road: 1.0 
+    weight_loss_heatmap: 1.0 
+    weight_loss_waypoint: 1.0 
+    num_points_per_trajectory: *num_points_per_trajectory
+    
+    transformer:
+      use_position_encoder: true
+      use_transformer_encoder: true
+      use_transformer_decoder: true
+      num_points_per_trajectory: *num_points_per_trajectory
+      feature_encoder_layers: [256, 128]
+      position_encoder_layers: [256, 128]
+      input_dim: 1900 # 7500
+      d_model: 64
+      dim_feedforward: 128
+      num_layers: 6
+      nhead: 8
+      activation: "relu"
+      dropout: 0.1
+      loss_type: 'mse' # 'smooth_l1', 'mse'
+      
+optimization:
+    optimizer: adam_onecycle
+    weight_decay: 0.01
+
+    # scheduler
+    lr: 0.003
+    moms: [0.95, 0.85]
+    div_factor: 10
+    pct_start: 0.4
+
+    grad_norm_clip: 10 

@@ -12,34 +12,22 @@ Repository for the paper ["Trajectory Prediction for Autonomous Driving with Top
 
 ## Requirements
 
-- python 3.6
+- python 3.6+
 
 - pytorch 1.4+
 
-- other requirements: `pip install -r requirements.txt`
+## Install build requirements
+
+```shell
+pip install -v -e .  # or "python setup.py develop"
+```
 
 ## Pretrained models
 
-Pre-trained weights can be downloaded [here](https://pan.baidu.com/s/1riU1Wu2lhYn5FJsaAoPB7A)(code:6ol2)
-
-## Build C++ extensions
-
-```shell script
-cd nnlib/datasets/trajectory/
-bash make.sh
-```
-
-## ROS demo
-
-See ros package [README](ros/README.md)
+Pre-trained weights can be downloaded [here](https://pan.baidu.com/s/1Ns7qjW352rMXJhleGJN2TQ)(code: uf9g)
 
 ## Train & Test
 
-Export current directory to `PYTHONPATH`:
-
-```bash
-export PYTHONPATH=`pwd`
-```
 ### Train
 
 * Train with multiple GPUs:
@@ -49,12 +37,12 @@ sh tools/scripts/dist_train.sh ${NUM_GPUS} -c ${CONFIG_FILE}
 
 * Train with a single GPU:
 ```shell script
-python3 tools/train.py -c ${CONFIG_FILE}
+python tools/train.py --cfg config/trajectory_prediction/transformer.yaml
 ```
 
 ### Test
 
 * Test with a pretrained model:
 ```shell script
-python3 tools/test.py -c ${CONFIG_FILE} -m ${MODEL_FILE}
+python tools/test.py --cfg config/trajectory_prediction/transformer.yaml --ckpt cache/transformer_epoch_120.pth
 ```
