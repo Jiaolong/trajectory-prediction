@@ -4,11 +4,11 @@
 
 Repository for the paper ["Trajectory Prediction for Autonomous Driving with Topometric Map"](https://arxiv.org/abs/2105.03869).
 ```
-@inproceedings{traj-pred:2020,
+@inproceedings{traj-pred:2022,
   title={Trajectory Prediction for Autonomous Driving with Topometric Map},
   author={J. Xu, L. Xiao, D. Zhao etal},
-  booktitle={arxiv},
-  year={2020}
+  booktitle={ICRA},
+  year={2022}
 }
 ```
 
